@@ -112,18 +112,20 @@ class _OwnerProfileViewState extends ConsumerState<OwnerProfileView> {
               icon: Icons.store,
               title: 'Canteen Settings',
               onTap: () {
-                if (ownerState.myCanteens.isNotEmpty) {
+                final selectedCanteen = ownerState.selectedCanteen;
+                if (selectedCanteen != null) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => OwnerCanteenSettingsView(
-                        canteen: ownerState.myCanteens.first,
-                      ),
+                      builder: (_) =>
+                          OwnerCanteenSettingsView(canteen: selectedCanteen),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('No canteens found')),
+                    const SnackBar(
+                      content: Text('Please select a canteen first'),
+                    ),
                   );
                 }
               },

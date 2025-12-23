@@ -56,9 +56,19 @@ class _OwnerCanteenSettingsViewState
   }
 
   Future<void> _pickTime(bool isOpening) async {
+    // Get current canteen times from provider
+    final ownerState = ref.read(ownerProvider);
+    final currentCanteen = ownerState.myCanteens.firstWhere(
+      (c) => c.id == widget.canteen.id,
+      orElse: () => widget.canteen,
+    );
+
+    final currentOpeningTime = _parseTime(currentCanteen.openingTime);
+    final currentClosingTime = _parseTime(currentCanteen.closingTime);
+
     final picked = await showTimePicker(
       context: context,
-      initialTime: isOpening ? _openingTime : _closingTime,
+      initialTime: isOpening ? currentOpeningTime : currentClosingTime,
     );
     if (picked != null) {
       setState(() {
@@ -76,9 +86,16 @@ class _OwnerCanteenSettingsViewState
     final openStr = _formatTime(_openingTime);
     final closeStr = _formatTime(_closingTime);
 
+    // Get the current canteen from provider (not from stale widget)
+    final ownerState = ref.read(ownerProvider);
+    final currentCanteen = ownerState.myCanteens.firstWhere(
+      (c) => c.id == widget.canteen.id,
+      orElse: () => widget.canteen,
+    );
+
     final success = await ref
         .read(canteenProvider.notifier)
-        .updateCanteenHours(widget.canteen.id, openStr, closeStr);
+        .updateCanteenHours(currentCanteen.id, openStr, closeStr);
 
     // Refresh parent
     ref.read(ownerProvider.notifier).fetchMyCanteens();
@@ -143,6 +160,10 @@ class _OwnerCanteenSettingsViewState
       orElse: () => widget.canteen,
     );
     final isOpen = canteen.isCurrentlyOpen;
+
+    // Use times from the latest canteen data
+    final currentOpeningTime = _parseTime(canteen.openingTime);
+    final currentClosingTime = _parseTime(canteen.closingTime);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -221,9 +242,17 @@ class _OwnerCanteenSettingsViewState
             ),
             const SizedBox(height: 20),
 
-            _buildTimeRow('Opening Time', _openingTime, () => _pickTime(true)),
+            _buildTimeRow(
+              'Opening Time',
+              currentOpeningTime,
+              () => _pickTime(true),
+            ),
             const SizedBox(height: 15),
-            _buildTimeRow('Closing Time', _closingTime, () => _pickTime(false)),
+            _buildTimeRow(
+              'Closing Time',
+              currentClosingTime,
+              () => _pickTime(false),
+            ),
 
             const SizedBox(height: 40),
 

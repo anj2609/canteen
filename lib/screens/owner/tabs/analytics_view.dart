@@ -40,6 +40,14 @@ class _AnalyticsViewState extends ConsumerState<AnalyticsView> {
     final data = ownerState.analyticsData ?? {};
     final isLoading = ownerState.isLoading;
 
+    // Listen for canteen changes and refresh analytics
+    ref.listen(ownerProvider, (previous, next) {
+      if (previous?.selectedCanteen?.id != next.selectedCanteen?.id &&
+          next.selectedCanteen != null) {
+        _fetchAnalytics();
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
