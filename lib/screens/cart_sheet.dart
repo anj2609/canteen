@@ -7,7 +7,9 @@ import '../providers/payment_provider.dart';
 import 'login_sheet.dart';
 
 class CartSheet extends ConsumerWidget {
-  const CartSheet({super.key});
+  final VoidCallback? onBrowseMenu;
+
+  const CartSheet({super.key, this.onBrowseMenu});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +37,7 @@ class CartSheet extends ConsumerWidget {
           const SizedBox(height: 20),
 
           Text(
-            'Your Cart',
+            'My Cart',
             style: GoogleFonts.urbanist(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -47,22 +49,93 @@ class CartSheet extends ConsumerWidget {
           // Items List
           Expanded(
             child: cartState.items.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.shopping_cart_outlined,
-                          size: 60,
-                          color: Colors.grey[300],
+                ? Column(
+                    children: [
+                      // Header with back button
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(Icons.arrow_back, size: 24),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'My Cart',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Your cart is empty',
-                          style: GoogleFonts.urbanist(color: Colors.grey[500]),
+                      ),
+                      const SizedBox(height: 60),
+                      // Empty state
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 120,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.shopping_bag_outlined,
+                                size: 60,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            Text(
+                              'Your cart is empty',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Add items to get started',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                onBrowseMenu?.call();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF1A1A1A),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 40,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              child: Text(
+                                'Browse Menu',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   )
                 : ListView.separated(
                     padding: const EdgeInsets.all(20),

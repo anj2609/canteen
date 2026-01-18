@@ -86,38 +86,24 @@ class _LaunchScreenState extends ConsumerState<LaunchScreen>
           children: [
             ScaleTransition(
               scale: _scaleAnimation,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0x33F62F56),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Image.asset(
-                  'assets/images/bunkbite_logo.png',
-                  fit: BoxFit.contain,
-                ),
+              child: Image.asset(
+                'assets/images/Screenshot 2026-01-17 154701.png',
+                width: 180,
+                height: 180,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(height: 30),
             FadeTransition(
               opacity: _opacityAnimation,
               child: Text(
-                'Skip the Queue,\nSavor the Flavor',
+                'Skip the queue.\nEat smart.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.urbanist(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  height: 1.2,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                  height: 1.4,
                 ),
               ),
             ),

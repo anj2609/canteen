@@ -63,9 +63,9 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/bunkbite_logo.png"
+  image_path: "assets/images/Screenshot 2026-01-17 154701.png"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/images/bunkbite_logo.png"
+  adaptive_icon_foreground: "assets/images/Screenshot 2026-01-17 154701.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
