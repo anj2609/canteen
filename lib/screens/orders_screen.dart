@@ -500,10 +500,35 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
                             }
                           }
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Items added to cart!'),
-                            ),
+                          showDialog<void>(
+                            context: context,
+                            builder: (dialogContext) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Items added to cart',
+                                  style: GoogleFonts.urbanist(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                content: Text(
+                                  'Your items have been added to the cart.',
+                                  style: GoogleFonts.urbanist(),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop();
+                                    },
+                                    child: Text(
+                                      'OK',
+                                      style: GoogleFonts.urbanist(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
                   style: ElevatedButton.styleFrom(

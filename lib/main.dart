@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'screens/launch_screen.dart';
+import 'core/constants.dart';
 import 'core/storage_service.dart';
 
 Future<void> main() async {
@@ -18,6 +19,7 @@ class BunkBiteApp extends StatelessWidget {
     return MaterialApp(
       title: 'BunkBite',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: AppConstants.scaffoldMessengerKey,
       theme: _buildTheme(Brightness.light),
       home: const LaunchScreen(),
     );
@@ -41,7 +43,10 @@ class BunkBiteApp extends StatelessWidget {
       textTheme: GoogleFonts.urbanistTextTheme(baseTheme.textTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        shadowColor: Colors.transparent,
         iconTheme: IconThemeData(color: Colors.black),
         titleTextStyle: TextStyle(
           color: Colors.black,

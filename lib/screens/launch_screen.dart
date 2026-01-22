@@ -89,7 +89,12 @@ class _LaunchScreenState extends ConsumerState<LaunchScreen>
           if (_isVersionLower(currentVersion, minVersion)) {
             if (mounted) {
               Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const UpdateRequiredScreen()),
+                MaterialPageRoute(
+                  builder: (_) => UpdateRequiredScreen(
+                    currentVersion: currentVersion,
+                    requiredVersion: minVersion,
+                  ),
+                ),
               );
             }
             return;
@@ -260,10 +265,10 @@ class _LaunchScreenState extends ConsumerState<LaunchScreen>
           children: [
             ScaleTransition(
               scale: _scaleAnimation,
-              child: SvgPicture.asset(
-                'assets/images/logo.svg',
-                width: 250,
-                height: 250,
+              child: Image.asset(
+                'assets/images/newlogo.png',
+                width: 200,
+                height: 200,
                 fit: BoxFit.contain,
               ),
             ),

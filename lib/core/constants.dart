@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AppConstants {
   // DEVELOPMENT MODE: Set to true when testing locally
   // PRODUCTION MODE: Set to false before building release APK
@@ -27,4 +29,7 @@ class AppConstants {
   static const String userNameKey = 'user_name';
   static const String userIdKey = 'user_id';
   static const String userRoleKey = 'user_role';
+
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 }

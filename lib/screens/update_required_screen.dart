@@ -3,7 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateRequiredScreen extends StatelessWidget {
-  const UpdateRequiredScreen({super.key});
+  const UpdateRequiredScreen({
+    super.key,
+    required this.currentVersion,
+    required this.requiredVersion,
+  });
+
+  final String currentVersion;
+  final String requiredVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +46,24 @@ class UpdateRequiredScreen extends StatelessWidget {
                   color: Colors.grey[600],
                 ),
               ),
+              const SizedBox(height: 16),
+              Text(
+                'Current version: $currentVersion',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Required version: $requiredVersion',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: Colors.grey[700],
+                ),
+              ),
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
@@ -48,6 +73,12 @@ class UpdateRequiredScreen extends StatelessWidget {
                     // Start Update flow
                     // You might want to link to Play Store / App Store
                     // launchUrl(Uri.parse('market://details?id=com.bunkbite.app.bunkbite'));
+                    launchUrl(
+                      Uri.parse(
+                        'https://play.google.com/store/apps/details?id=com.bunkbite.app.canteenapp',
+                      ),
+                      mode: LaunchMode.externalApplication,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
