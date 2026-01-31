@@ -142,19 +142,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     // Search Header
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: const Icon(
-                              Icons.arrow_back_ios_new,
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(child: _buildSearchBar()),
-                        ],
-                      ),
+                      child: _buildSearchBar(),
                     ),
 
                     // Content (History or Results)

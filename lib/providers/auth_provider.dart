@@ -24,12 +24,13 @@ class AuthState {
     bool? isLoading,
     bool? isAuthenticated,
     User? user,
+    bool clearUser = false,
     String? error,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
-      user: user, // Nullable update logic requires care, but for simplicity:
+      user: clearUser ? null : (user ?? this.user),
       error: error,
     );
   }
@@ -42,15 +43,21 @@ class AuthController extends StateNotifier<AuthState> {
 
   Future<void> checkAuthStatus() async {
     final token = storageService.getString(AppConstants.authTokenKey);
-    if (token != null) {
+    if (token != null && !JwtDecoder.isExpired(token)) {
+      // Token exists and is valid
       state = AuthState(isAuthenticated: true, isLoading: true);
       try {
         await fetchProfile();
       } catch (e) {
-        // If profile fetch fails (e.g. 401), unauthorized
-        state = AuthState(isAuthenticated: false, isLoading: false);
+        // Profile fetch failed - clear auth
+        await signOut();
       }
     } else {
+      // No token or expired
+      if (token != null) {
+        // Clear expired token
+        await signOut();
+      }
       state = AuthState(isAuthenticated: false, isLoading: false);
     }
   }
@@ -68,17 +75,19 @@ class AuthController extends StateNotifier<AuthState> {
         if (token != null && !JwtDecoder.isExpired(token)) {
           Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
-          // Retrieve stored email and name
+          // Retrieve all stored user data
           final storedEmail = storageService.getString(
             AppConstants.userEmailKey,
           );
           final storedName = storageService.getString(AppConstants.userNameKey);
+          final storedId = storageService.getString(AppConstants.userIdKey);
+          final storedRole = storageService.getString(AppConstants.userRoleKey);
 
           final user = User(
-            id: decodedToken['id'] ?? decodedToken['_id'] ?? '',
+            id: storedId ?? decodedToken['id'] ?? decodedToken['_id'] ?? '',
             email: storedEmail ?? decodedToken['email'] ?? 'user@example.com',
             name: storedName ?? decodedToken['name'] ?? 'User',
-            role: decodedToken['role'] ?? 'user',
+            role: storedRole ?? decodedToken['role'] ?? 'user',
           );
           state = state.copyWith(
             isAuthenticated: true,
@@ -86,8 +95,8 @@ class AuthController extends StateNotifier<AuthState> {
             user: user,
           );
         } else {
-          // Token expired or invalid
-          state = state.copyWith(isAuthenticated: false, isLoading: false);
+          // Token expired or invalid - sign out
+          await signOut();
         }
       }
     } catch (e) {
@@ -145,16 +154,18 @@ class AuthController extends StateNotifier<AuthState> {
       final userEmail = decodedToken['email'] ?? email;
       final userName = decodedToken['name'] ?? email.split('@')[0];
 
-      // Store email and name persistently
-      await storageService.setString(AppConstants.userEmailKey, userEmail);
-      await storageService.setString(AppConstants.userNameKey, userName);
-
       final user = User(
         id: decodedToken['id'] ?? decodedToken['_id'] ?? '',
         email: userEmail,
         name: userName,
         role: decodedToken['role'] ?? 'user',
       );
+
+      // Store all user data persistently
+      await storageService.setString(AppConstants.userEmailKey, userEmail);
+      await storageService.setString(AppConstants.userNameKey, userName);
+      await storageService.setString(AppConstants.userIdKey, user.id);
+      await storageService.setString(AppConstants.userRoleKey, user.role);
 
       state = AuthState(isAuthenticated: true, isLoading: false, user: user);
       return true;
@@ -175,6 +186,8 @@ class AuthController extends StateNotifier<AuthState> {
     await storageService.remove(AppConstants.authTokenKey);
     await storageService.remove(AppConstants.userEmailKey);
     await storageService.remove(AppConstants.userNameKey);
+    await storageService.remove(AppConstants.userIdKey);
+    await storageService.remove(AppConstants.userRoleKey);
     state = AuthState(isAuthenticated: false);
   }
 
@@ -188,6 +201,8 @@ class AuthController extends StateNotifier<AuthState> {
       await storageService.remove(AppConstants.authTokenKey);
       await storageService.remove(AppConstants.userEmailKey);
       await storageService.remove(AppConstants.userNameKey);
+      await storageService.remove(AppConstants.userIdKey);
+      await storageService.remove(AppConstants.userRoleKey);
 
       // Reset state
       state = AuthState(isAuthenticated: false);

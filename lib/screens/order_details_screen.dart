@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:convert';
 import '../models/order_model.dart';
 
@@ -56,11 +55,12 @@ class OrderDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 30),
 
                     // QR Code
-                    // QR Code
-                    // Only show if NOT completed, NOT pending, and NOT cancelled
-                    if (order.status.toLowerCase() != 'completed' &&
+                    // Only show if QR code is available and order is in valid state
+                    if (order.qrCode != null &&
+                        order.qrCode!.isNotEmpty &&
+                        order.status.toLowerCase() != 'completed' &&
                         order.status.toLowerCase() != 'pending' &&
-                        order.status.toLowerCase() != 'cancelled')
+                        order.status.toLowerCase() != 'cancelled') ...[
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -68,38 +68,23 @@ class OrderDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: Colors.grey[300]!),
                         ),
-                        child: order.qrCode != null && order.qrCode!.isNotEmpty
-                            ? SizedBox(
-                                width: 180,
-                                height: 180,
-                                child: Image.memory(
-                                  base64Decode(
-                                    order.qrCode!.replaceFirst(
-                                      RegExp(r'data:image\/.*;base64,'),
-                                      '',
-                                    ),
-                                  ),
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Center(
-                                      child: Icon(Icons.error),
-                                    );
-                                  },
-                                ),
-                              )
-                            : QrImageView(
-                                data: order.id,
-                                version: QrVersions.auto,
-                                size: 180,
-                                backgroundColor: Colors.white,
+                        child: SizedBox(
+                          width: 180,
+                          height: 180,
+                          child: Image.memory(
+                            base64Decode(
+                              order.qrCode!.replaceFirst(
+                                RegExp(r'data:image\/.*;base64,'),
+                                '',
                               ),
+                            ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(child: Icon(Icons.error));
+                            },
+                          ),
+                        ),
                       ),
-                    if (order.status.toLowerCase() != 'completed' &&
-                        order.status.toLowerCase() != 'pending' &&
-                        order.status.toLowerCase() != 'cancelled')
                       const SizedBox(height: 12),
-                    if (order.status.toLowerCase() != 'completed' &&
-                        order.status.toLowerCase() != 'pending' &&
-                        order.status.toLowerCase() != 'cancelled')
                       Text(
                         'Show this QR code at the counter for pickup',
                         textAlign: TextAlign.center,
@@ -108,10 +93,8 @@ class OrderDetailsScreen extends StatelessWidget {
                           color: Colors.grey[600],
                         ),
                       ),
-                    if (order.status.toLowerCase() != 'completed' &&
-                        order.status.toLowerCase() != 'pending' &&
-                        order.status.toLowerCase() != 'cancelled')
                       const SizedBox(height: 30),
+                    ],
 
                     // Status Indicator
                     Container(
@@ -141,6 +124,59 @@ class OrderDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 30),
+
+                    // Refund Information (if refunded)
+                    if (order.refundId != null) ...[
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE3F2FD), // Light blue
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFF1976D2)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.check_circle,
+                                  color: Color(0xFF1976D2),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Refund Processed',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF1976D2),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Refund ID: ${order.refundId}',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 13,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'The refund will reflect in your original payment method within 2-3 business days.',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 12,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
 
                     // Pickup Location
                     Align(

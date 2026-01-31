@@ -269,7 +269,14 @@ class _OrdersScreenState extends ConsumerState<OrdersScreen> {
     String statusText;
     IconData statusIcon;
 
-    if (order.status == 'cancelled') {
+    // Check for refund first (highest priority)
+    if (order.refundId != null) {
+      statusBgColor = const Color(0xFFE3F2FD); // Light blue
+      statusTextColor = const Color(0xFF1976D2); // Blue
+      statusBorderColor = const Color(0xFF1976D2);
+      statusText = 'Refunded';
+      statusIcon = Icons.check_circle;
+    } else if (order.status == 'cancelled') {
       statusBgColor = const Color(0xFFFFE5EC);
       statusTextColor = const Color(0xFFFF4D6D);
       statusBorderColor = const Color(0xFFFF4D6D);

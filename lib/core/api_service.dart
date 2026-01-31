@@ -56,6 +56,24 @@ class ApiService {
       ),
     );
 
+    // 401 Error Handler - Clear auth data on unauthorized responses
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
+            // Token expired or invalid - clear auth data
+            await storageService.remove(AppConstants.authTokenKey);
+            await storageService.remove(AppConstants.userEmailKey);
+            await storageService.remove(AppConstants.userNameKey);
+            await storageService.remove(AppConstants.userIdKey);
+            await storageService.remove(AppConstants.userRoleKey);
+          }
+          return handler.next(e);
+        },
+      ),
+    );
+
+    // Auth Header Interceptor
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {

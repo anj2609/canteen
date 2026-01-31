@@ -260,28 +260,6 @@ class CartScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Tax (10%)',
-                  style: GoogleFonts.urbanist(
-                    color: const Color(0xFF8391A1), // Grey
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  '₹0.0', // Matching the screenshot explicitly which shows 0.0
-                  style: GoogleFonts.urbanist(
-                    color: const Color(0xFF1E232C),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: Divider(color: Color(0xFFE8ECF4)), // Light divider
@@ -307,7 +285,37 @@ class CartScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            // Pickup Notice
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF4E5), // Light orange background
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFF9800)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    color: Color(0xFFFF9800),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Order must be picked up within 12 hours or will be refunded',
+                      style: GoogleFonts.urbanist(
+                        fontSize: 12,
+                        color: const Color(0xFFFF9800),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               height: 56,

@@ -42,6 +42,7 @@ class OrderModel {
   final String paymentStatus;
   final String? paymentId; // Added paymentId
   final String? qrCode;
+  final String? refundId; // Refund ID if order was refunded
   final String createdAt;
 
   OrderModel({
@@ -55,6 +56,7 @@ class OrderModel {
     required this.paymentStatus,
     this.paymentId,
     this.qrCode,
+    this.refundId,
     required this.createdAt,
   });
 
@@ -79,6 +81,7 @@ class OrderModel {
       paymentStatus: json['paymentStatus'] ?? 'pending',
       paymentId: json['paymentId'], // Parse paymentId
       qrCode: json['qrCode'],
+      refundId: json['refundId'], // Parse refundId
       createdAt: json['createdAt'] ?? '',
     );
   }
